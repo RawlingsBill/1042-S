@@ -85,7 +85,7 @@ The input must be a **CSV file encoded in latin-1** with columns that match IRS 
 | `BOX2_GROSS INCOME` | 2 | Gross income subject to withholding |
 | `BOX7A_FEDERAL TAX WITHHELD` | 7a | Federal tax withheld amount |
 | `BOX8_WITHHOLDING BY OTHER AGENTS` | 8 | Withholding by other agents |
-| `BOX9_AMOUNT REPAID RECIPIENT` | 9 | Amount repaid to recipient |
+| `BOX9_TAX PAID WITHHOLDING AGENT` | 9 | Tax paid by withholding agent |
 | `BOX10_TOTAL WITHHOLDING CREDIT` | 10 | Total withholding credit |
 | `BOX13B_RECIPIENT COUNTRY CODE` | 13b | 2-letter recipient country code |
 | `BOX13B_RECIPIENT COUNTRY NAME` | 13b | Recipient country name |

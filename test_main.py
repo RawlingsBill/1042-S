@@ -68,10 +68,10 @@ _CLEAN = {
     "BOX2_GROSS INCOME": 1000.0,
     "BOX7A_FEDERAL TAX WITHHELD": 150.0,
     "BOX8_TAX WITHHELD OTHER AGENTS": 0.0,
-    "BOX9_AMOUNT REPAID RECIPIENT": 0.0,
+    "BOX9_TAX PAID WITHHOLDING AGENT": 0.0,
     "BOX10_TOTAL WITHHOLDING CREDIT": 150.0,
     "BOX13B_RECIPIENT COUNTRY CODE": "CA",
-    "BOX13D_RECIPIENT FOREIGN COUNTRY": "Canada",
+    "BOX13D_RECIPIENT COUNTRY": "Canada",
     "BOX13D_RECIPIENT STATE(2LetterCode)": "",
     "BOX13D_RECIPIENT PROVINCE(2LetterCode)": "ON",
 }
@@ -196,7 +196,7 @@ class TestBOX10:
         assert validate_box10([row(**{
             "BOX7A_FEDERAL TAX WITHHELD": 100.0,
             "BOX8_TAX WITHHELD OTHER AGENTS": 20.0,
-            "BOX9_AMOUNT REPAID RECIPIENT": 5.0,
+            "BOX9_TAX PAID WITHHOLDING AGENT": 5.0,
             "BOX10_TOTAL WITHHOLDING CREDIT": 125.0,
         })]) == []
 
@@ -204,7 +204,7 @@ class TestBOX10:
         errors = validate_box10([row(**{
             "BOX7A_FEDERAL TAX WITHHELD": 100.0,
             "BOX8_TAX WITHHELD OTHER AGENTS": 20.0,
-            "BOX9_AMOUNT REPAID RECIPIENT": 5.0,
+            "BOX9_TAX PAID WITHHOLDING AGENT": 5.0,
             "BOX10_TOTAL WITHHOLDING CREDIT": 999.0,
         })])
         assert len(errors) == 1
@@ -215,7 +215,7 @@ class TestBOX10:
         errors = validate_box10([row(**{
             "BOX7A_FEDERAL TAX WITHHELD": 150.0,
             "BOX8_TAX WITHHELD OTHER AGENTS": float("nan"),
-            "BOX9_AMOUNT REPAID RECIPIENT": 0.0,
+            "BOX9_TAX PAID WITHHOLDING AGENT": 0.0,
             "BOX10_TOTAL WITHHOLDING CREDIT": 150.0,
         })])
         assert errors == []
@@ -225,7 +225,7 @@ class TestBOX10:
         errors = validate_box10([row(**{
             "BOX7A_FEDERAL TAX WITHHELD": 150.0,
             "BOX8_TAX WITHHELD OTHER AGENTS": 0.0,
-            "BOX9_AMOUNT REPAID RECIPIENT": float("nan"),
+            "BOX9_TAX PAID WITHHOLDING AGENT": float("nan"),
             "BOX10_TOTAL WITHHOLDING CREDIT": 150.0,
         })])
         assert errors == []
@@ -255,7 +255,7 @@ class TestBOX13B:
     def test_mismatched_name_flagged(self, country_data):
         errors = validate_box13b(
             [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "CA",
-                    "BOX13D_RECIPIENT FOREIGN COUNTRY": "France"})],
+                    "BOX13D_RECIPIENT COUNTRY": "France"})],
             country_data,
         )
         assert len(errors) == 1
@@ -264,7 +264,7 @@ class TestBOX13B:
     def test_case_insensitive_match(self, country_data):
         errors = validate_box13b(
             [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "ca",
-                    "BOX13D_RECIPIENT FOREIGN COUNTRY": "CANADA"})],
+                    "BOX13D_RECIPIENT COUNTRY": "CANADA"})],
             country_data,
         )
         assert errors == []
@@ -272,7 +272,7 @@ class TestBOX13B:
     def test_trailing_whitespace_stripped(self, country_data):
         errors = validate_box13b(
             [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "CA   ",
-                    "BOX13D_RECIPIENT FOREIGN COUNTRY": "Canada"})],
+                    "BOX13D_RECIPIENT COUNTRY": "Canada"})],
             country_data,
         )
         assert errors == []
@@ -280,7 +280,7 @@ class TestBOX13B:
     def test_us_code_matches_united_states(self, country_data):
         errors = validate_box13b(
             [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "US",
-                    "BOX13D_RECIPIENT FOREIGN COUNTRY": "United States",
+                    "BOX13D_RECIPIENT COUNTRY": "United States",
                     "BOX13D_RECIPIENT STATE(2LetterCode)": "NY",
                     "BOX13D_RECIPIENT PROVINCE(2LetterCode)": ""})],
             country_data,
@@ -297,7 +297,7 @@ class TestBOX13D:
     def test_us_valid_state_no_error(self, state_data, prov_data):
         errors = validate_box13d(
             [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "US",
-                    "BOX13D_RECIPIENT FOREIGN COUNTRY": "United States",
+                    "BOX13D_RECIPIENT COUNTRY": "United States",
                     "BOX13D_RECIPIENT STATE(2LetterCode)": "CA",
                     "BOX13D_RECIPIENT PROVINCE(2LetterCode)": ""})],
             state_data, prov_data,
@@ -307,7 +307,7 @@ class TestBOX13D:
     def test_us_invalid_state_flagged(self, state_data, prov_data):
         errors = validate_box13d(
             [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "US",
-                    "BOX13D_RECIPIENT FOREIGN COUNTRY": "United States",
+                    "BOX13D_RECIPIENT COUNTRY": "United States",
                     "BOX13D_RECIPIENT STATE(2LetterCode)": "ZZ",
                     "BOX13D_RECIPIENT PROVINCE(2LetterCode)": ""})],
             state_data, prov_data,
@@ -328,7 +328,7 @@ class TestBOX13D:
     def test_non_canada_with_province_flagged(self, state_data, prov_data):
         errors = validate_box13d(
             [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "DE",
-                    "BOX13D_RECIPIENT FOREIGN COUNTRY": "Germany",
+                    "BOX13D_RECIPIENT COUNTRY": "Germany",
                     "BOX13D_RECIPIENT STATE(2LetterCode)": "",
                     "BOX13D_RECIPIENT PROVINCE(2LetterCode)": "ON"})],
             state_data, prov_data,
@@ -338,7 +338,7 @@ class TestBOX13D:
     def test_non_us_no_state_no_error(self, state_data, prov_data):
         errors = validate_box13d(
             [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "DE",
-                    "BOX13D_RECIPIENT FOREIGN COUNTRY": "Germany",
+                    "BOX13D_RECIPIENT COUNTRY": "Germany",
                     "BOX13D_RECIPIENT STATE(2LetterCode)": "",
                     "BOX13D_RECIPIENT PROVINCE(2LetterCode)": ""})],
             state_data, prov_data,
@@ -352,7 +352,7 @@ class TestBOX13D:
         for state in state_data:
             errors = validate_box13d(
                 [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "US",
-                        "BOX13D_RECIPIENT FOREIGN COUNTRY": "United States",
+                        "BOX13D_RECIPIENT COUNTRY": "United States",
                         "BOX13D_RECIPIENT STATE(2LetterCode)": state["Code"],
                         "BOX13D_RECIPIENT PROVINCE(2LetterCode)": ""})],
                 state_data, prov_data,
@@ -365,7 +365,7 @@ class TestBOX13D:
         for prov in prov_data:
             errors = validate_box13d(
                 [row(**{"BOX13B_RECIPIENT COUNTRY CODE": "CA",
-                        "BOX13D_RECIPIENT FOREIGN COUNTRY": "Canada",
+                        "BOX13D_RECIPIENT COUNTRY": "Canada",
                         "BOX13D_RECIPIENT STATE(2LetterCode)": "",
                         "BOX13D_RECIPIENT PROVINCE(2LetterCode)": prov["Code"]})],
                 state_data, prov_data,

@@ -81,7 +81,7 @@ def validate_box10(data_dict):
         box8 = float(x["BOX8_TAX WITHHELD OTHER AGENTS"])
         if math.isnan(box8):
             box8 = 0
-        box9 = float(x["BOX9_AMOUNT REPAID RECIPIENT"])
+        box9 = float(x["BOX9_TAX PAID WITHHOLDING AGENT"])
         if math.isnan(box9):
             box9 = 0
 
@@ -99,7 +99,7 @@ def validate_box13b(data_dict, country_data):
     rows = []
     for x in data_dict:
         code = x["BOX13B_RECIPIENT COUNTRY CODE"].rstrip()
-        name = str(x["BOX13D_RECIPIENT FOREIGN COUNTRY"]).rstrip()
+        name = str(x["BOX13D_RECIPIENT COUNTRY"]).rstrip()
         if name == "nan":
             name = "Null"
         if not isinstance(name, str):
@@ -123,7 +123,7 @@ def validate_box13d(data_dict, state_data, prov_data):
     # --- State check (USA) ---
     for x in data_dict:
         match = True
-        country = str(x["BOX13D_RECIPIENT FOREIGN COUNTRY"]).rstrip()
+        country = str(x["BOX13D_RECIPIENT COUNTRY"]).rstrip()
         if not isinstance(country, str):
             country = "null"
             state = x.get("BOX13D_RECIPIENT STATE(2LetterCode)", "null")
@@ -158,7 +158,7 @@ def validate_box13d(data_dict, state_data, prov_data):
         prov = str(x["BOX13D_RECIPIENT PROVINCE(2LetterCode)"]).replace("    ", "")
         if prov == "nan":
             prov = "Null"
-        country = str(x["BOX13D_RECIPIENT FOREIGN COUNTRY"]).rstrip()
+        country = str(x["BOX13D_RECIPIENT COUNTRY"]).rstrip()
         match = True
 
         if country.casefold() != "canada" and prov not in ("", "Null"):
