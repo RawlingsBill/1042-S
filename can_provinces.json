@@ -1,0 +1,15 @@
+[
+  {"Name":"ALBERTA","Code":"AB"},
+  {"Name":"BRITISH COLUMBIA","Code":"BC"},
+  {"Name":"MANITOBA","Code":"MB"},
+  {"Name":"NEW BRUNSWICK","Code":"NB"},
+  {"Name":"NEWFOUNDLAND AND LABRADOR","Code":"NL"},
+  {"Name":"NORTHWEST TERRITORIES","Code":"NT"},
+  {"Name":"NOVA SCOTIA","Code":"NS"},
+  {"Name":"NUNAVUT","Code":"NU"},
+  {"Name":"ONTARIO","Code":"ON"},
+  {"Name":"PRINCE EDWARD ISLAND","Code":"PE"},
+  {"Name":"QUEBEC","Code":"QC"},
+  {"Name":"SASKATCHEWAN","Code":"SK"},
+  {"Name":"YUKON","Code":"YT"}
+]
